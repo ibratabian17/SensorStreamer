@@ -1,13 +1,16 @@
 package cz.honzamrazek.sensorstreamer;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable; // Updated import for AndroidX
 import android.widget.Spinner;
 
 import java.io.IOException;
@@ -70,16 +73,23 @@ public class StreamingService extends Service
                     return START_NOT_STICKY;
             }
 
-            Intent stop = new Intent(this, StreamingService.class);
-            stop.setAction(STOP);
-            PendingIntent pStop = PendingIntent.getService(this, 0, stop, 0);
-
-            Notification.Builder builder = new Notification.Builder(getBaseContext())
+            Intent stopIntent = new Intent(this, StreamingService.class);
+            stopIntent.setAction(STOP);
+            PendingIntent pStop = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            String channelId = "default_channel";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(channelId, "Default Channel", NotificationManager.IMPORTANCE_HIGH);
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.createNotificationChannel(channel);
+            }
+            
+            Notification.Builder builder = new Notification.Builder(getBaseContext(), channelId)
                     //.setTicker("Your Ticker")
                     .setSmallIcon(R.drawable.ic_stat_name)
                     .setContentTitle(getString(R.string.streaming_is_active))
                     .setContentText(mSender.getDescription(this))
-                    .addAction(R.drawable.ic_stat_name, getString(R.string.stop), pStop);
+                    .addAction(R.drawable.ic_stat_name, getString(R.string.stop), pStop)
+                    .setPriority(Notification.PRIORITY_HIGH);
 
             startForeground(1, builder.build());
         }
