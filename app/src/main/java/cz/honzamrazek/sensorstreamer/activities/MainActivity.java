@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import com.google.android.material.color.DynamicColors;
 
 import cz.honzamrazek.sensorstreamer.R;
 import cz.honzamrazek.sensorstreamer.fragments.ConnectionsFragment;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DynamicColors.applyToActivityIfAvailable(this);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

@@ -21,6 +21,6 @@
 			<meta-data android:name="androidx.appcompat.app.AppCompatActivity.PARENT_ACTIVITY" android:value=".activities.MainActivity" />
 		</activity>
 		<service android:name=".StreamingService" android:exported="false" android:foregroundServiceType="dataSync" />
-		<activity android:name=".StreamingErrorActivity" android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
+		<activity android:name=".StreamingErrorActivity" android:theme="@style/Theme.Material3.DayNight.Dialog.Alert" />
 	</application>
 </manifest>

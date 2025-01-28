@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.google.android.material.color.DynamicColors;
 
 import cz.honzamrazek.sensorstreamer.R;
 import cz.honzamrazek.sensorstreamer.SharedStorageManager;
@@ -34,6 +35,7 @@ public class EditPacketActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DynamicColors.applyToActivityIfAvailable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_packet);
 
