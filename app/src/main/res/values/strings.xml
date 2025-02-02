@@ -70,4 +70,6 @@
     <string name="connected_to">"Connected to "</string>
     <string name="serving_at">"Serving at "</string>
     <string name="streaming_is_active">Streaming is active</string>
+    <string name="already_streaming">Already streaming</string>
+    <string name="stop_the_service_first">Your streaming is already running on. Stop it first.</string>
 </resources>

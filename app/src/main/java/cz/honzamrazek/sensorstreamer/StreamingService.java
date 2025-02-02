@@ -28,10 +28,17 @@ public class StreamingService extends Service
 
     private PacketComposer mComposer;
     private PacketSender mSender;
+    private boolean isRunning = false;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(START)) {
+            // If already running, ignore the start command
+            if (isRunning) {
+                errorMessage(getString(R.string.already_streaming), getString(R.string.stop_the_service_first));
+                return START_NOT_STICKY;
+            }
+            
             int period = intent.getIntExtra(PERIOD, 0);
             SharedStorageManager<Packet> packetManager = new SharedStorageManager<>(this, Packet.class);
             int packetId = intent.getIntExtra(PACKET, Spinner.INVALID_POSITION);
@@ -84,7 +91,6 @@ public class StreamingService extends Service
             }
             
             Notification.Builder builder = new Notification.Builder(getBaseContext(), channelId)
-                    //.setTicker("Your Ticker")
                     .setSmallIcon(R.drawable.ic_stat_name)
                     .setContentTitle(getString(R.string.streaming_is_active))
                     .setContentText(mSender.getDescription(this))
@@ -92,6 +98,7 @@ public class StreamingService extends Service
                     .setPriority(Notification.PRIORITY_HIGH);
 
             startForeground(1, builder.build());
+            isRunning = true;
         }
         else if(intent.getAction().equals(STOP)) {
             try {
@@ -104,6 +111,7 @@ public class StreamingService extends Service
             }
             stopForeground(true);
             stopSelf();
+            isRunning = false;
         }
         return START_STICKY;
     }
