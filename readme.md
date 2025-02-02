@@ -2,70 +2,57 @@
 
 # SensorStreamer
 
-Our phones are full of useful sensors - accelerometer, gyroscope,
-magnetometer... Every hacker have surely experienced the need to test something
-with one of these sensors. Usually you take Arduino with a sensor breakout board
-and you write a small piece of code, which send data to serial line.
+Our phones are full of useful sensors - accelerometer, gyroscope, magnetometer, and more. Many developers have needed to test these sensors. Traditionally, this meant using an Arduino with sensor breakout boards and writing code for serial communication.
 
-But not always you have the sensors you need and the wires are sometimes a
-limitation. Here comes SensorStreamer - lightweight Android app, which can log
-sensor data and send them over network to your computer, where you can analyze
-them e.g. with a simple Python script.
+However, sensor availability and wiring can be limiting factors. SensorStreamer offers a solution - a lightweight Android app that logs sensor data and transmits it over network to your computer for analysis, for example using Python scripts.
 
-You can download the app at the Play Store: [SensorStreamer](https://play.google.com/store/apps/details?id=cz.honzamrazek.sensorstreamer)
+Download the latest version from Github Releases: [SensorStreamer](https://github.com/ibratabian17/SensorStreamer/releases)
 
 ## Supported Features
 
-- streaming of values from any sensor in the phone (as far as the sensor is
-  supported by Android API)
-- stream data over TCP sockets in
-    - client mode
-    - server mode
-- stream data in
-    - JSON object
-    - binary packet
+- Stream data from any Android-supported phone sensor
+- TCP socket streaming in:
+  - Client mode
+  - Server mode
+- Data formats:
+  - JSON object
+  - Binary packet
 
 ## Format of the JSON Packet
 
-The packets contain a JSON object as the top level entity. This object contains
-a field for each sensor. Each sensor supplies two values:
+Each packet contains a JSON object with fields for each sensor. Each sensor provides:
 
-- `timestamp` (in form of nano seconds)
-- `value` which is either a single float value or a 3D array of floats. For
-  precise meaning of these values, see [Android Sensor Reference](https://developer.android.com/guide/topics/sensors/sensors_motion.html#sensors-motion-accel).
+- `timestamp` (in nanoseconds)
+- `value`: either a single float or a 3D float array. For details on these values, see [Android Sensor Reference](https://developer.android.com/guide/topics/sensors/sensors_motion.html#sensors-motion-accel).
 
-As it is impossible to capture value from multiple sensor at the same time,
-time-stamp is included for each sensor independently. There should be only small
-differences in this timestamps, however, if you application requires precise
-timing, this value might come handy.
+Timestamps are included per sensor due to impossibility of simultaneous capture. While differences are typically minimal, precise timing data is available if needed.
 
 ## Format of the Binary Packet
 
-Binary packet is designed to be as simple and as compact as possible. The format
-is following:
+The binary packet format is optimized for simplicity and compactness:
 
 ```
 [0x80] [timestamp 8 bytes] [sensor values 1 or 3 float] ... [sensor values 1 or 3 float]
 ```
 
-Timestamp is optional and can be omitted. The sensors are in the exact same
-order as the configuration in app says. This packet contains only one timestamp
-in order to be as compact as possible.
+Timestamp is optional. Sensors appear in the same order as configured in the app, with a single timestamp for efficiency.
 
 ## Timing
 
-Due to the restrictions of Android API, it no possible to specify an exact
-frequency for sensor reading. Only 4 modes are available with frequencies
-roughly 5 Hz, 16 Hz, 100 Hz and the fastest possible mode. Note, that there no
-guarantee on the timing - the sensor might not be able to deliver values faster.
-In such a case, the frequency is limited by the slowest sensor in the packet.
+Android API limits sensor reading to 4 frequency modes: approximately 5 Hz, 16 Hz, 100 Hz, and maximum possible speed. Actual frequencies may be lower, limited by the slowest configured sensor.
 
 ## Python Client
 
-There is a 3rd party Python tool to capture data:
-[PhoneSensor](https://github.com/nup002/PhoneSensors).
+A third-party Python tool is available: [PhoneSensor](https://github.com/nup002/PhoneSensors).
 
-## Author
+## Project Status
 
-Developed as a quick dirty hack by Jan "yaqwsx" Mrázek, graphics made by [Martin
-Mikšík](https://github.com/mamiksik).
+This project was originally developed by Jan "yaqwsx" Mrázek with graphics by [Martin Mikšík](https://github.com/mamiksik). The current fork by [ibratabian17](https://github.com/ibratabian17) includes:
+
+- Compatibility with newer Android versions
+- Updates to meet modern Android security requirements
+- UI/UX improvements
+- Updated dependencies and SDK support
+
+The original project is no longer maintained, but this fork keeps the functionality alive on modern devices.
+
